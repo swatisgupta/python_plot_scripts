@@ -2,6 +2,7 @@
 
 export directory=${1}
 export directory1=${1}_images
+export system=${2}
 
 EXPS_DIR=`ls -l ${directory}| grep ^d | sed -e "s/.* //"`
 
@@ -59,7 +60,7 @@ do
     echo "Nstr = ${Nstr}.........................."
     echo "Start_time = ${start_time}........................"
     
-    echo "python3 read_tau_traces.py ${directory}/${exp1} ${Nsub} ${Npar} ${Npar2} ${start_time} ${directory1}/${exp} > t_${exp}.out" 
-    python3 read_tau_traces.py ${directory}/${exp1} ${Nsub} ${Npar} ${Npar2} ${start_time} ${directory1}/${exp} > t_${exp}.out 
+    echo "python3 read_tau_traces.py ${directory}/${exp1} ${Nsub} ${Npar} ${Npar2} ${start_time} ${directory1}/${exp} ${system} > t_${exp}.out"
+    python3 read_tau_traces.py ${directory}/${exp1} ${Nsub} ${Npar} ${Npar2} ${start_time} ${directory1}/${exp} ${system} > t_${exp}.out  
     #exit
 done 

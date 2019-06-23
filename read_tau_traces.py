@@ -29,7 +29,6 @@ max_duration=90
 
 is_microsecond=1 
 
-
 def copy_rename(old_file_name, new_file_name, o_dir, n_dir):
     shutil.copy(old_file_name, n_dir)
     dst_file = os.path.join(n_dir, old_file_name)
@@ -160,6 +159,61 @@ umpi[MPIS%CMPI] = []
 umpi[MPIR%CMPI] = []
 umpi[MPISR%CMPI] = []
 
+
+def get_counters_info(system):
+    counters = {}
+    if system == "deepthought2":
+        counters[L3]=["PAPI_NATIVE_LAST_LEVEL_CACHE_MISSES", "LIKWID_L3_LAT_CACHE_MISS_PMC1"]
+        counters[INS]=["PAPI_NATIVE_INSTRUCTIONS_RETIRED", "LIKWID_INSTR_RETIRED_ANY_FIXC0"]
+        counters[TCA]=["PAPI_NATIVE_LAST_LEVEL_CACHE_REFERENCES", "LIKWID_L3_LAT_CACHE_REFERENCE_PMC0"]
+        counters[LD]=["PAPI_NATIVE_CYCLE_ACTIVITY_STALLS_LDM_PENDING", "PAPI_NATIVE_UOPS_RETIRED_STALL_CYCLES", "LIKWID_CYCLE_ACTIVITY_CYCLES_LDM_PENDING_PMC3"]
+        counters[ST]=["PAPI_NATIVE_RESOURCE_STALLS_SB", "LIKWID_RESOURCE_STALLS_SB_PMC4"]
+        counters[TCYC]=["PAPI_NATIVE_perf__CPU-CYCLES", "PAPI_NATIVE_ix86arch__UNHALTED_CORE_CYCLES"i, "LIKWID_CPU_CLK_UNHALTED_CORE_FIXC1"]
+        counters[MEMO]=["PAPI_NATIVE_MEM_LOAD_UOPS_LLC_MISS_RETIRED", "LIKWID_MEM_UOPS_RETIRED_LOADS_PMC2"]
+        counters[MEM1_WR1]=["LIKWID_WPQ_INSERTS_MBOX0C1_EDGEDETECT_THRESHOLD=0x1", "LIKWID_CAS_COUNT_WR_MBOX0C1_EDGEDETECT_THRESHOLD=0x1", "LIKWID_WPQ_CYCLES_NE_MBOX0C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM1_WR2]=["LIKWID_WPQ_INSERTS_MBOX1C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_WR_MBOX1C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX1C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM1_WR3]=["LIKWID_WPQ_INSERTS_MBOX2C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_WR_MBOX2C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX2C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM1_WR4]=["LIKWID_WPQ_INSERTS_MBOX3C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_WR_MBOX3C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX3C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM1_RD1]=["LIKWID_RPQ_INSERTS_MBOX0C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX0C0" , "LIKWID_RPQ_CYCLES_NE_MBOX0C0_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM1_RD2]=["LIKWID_RPQ_INSERTS_MBOX1C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX1C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_RPQ_CYCLES_NE_MBOX1C0_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM1_RD3]=["LIKWID_RPQ_INSERTS_MBOX2C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX2C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_RPQ_CYCLES_NE_MBOX2C0_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM1_RD4]=["LIKWID_RPQ_INSERTS_MBOX3C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX3C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX3C0_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM2_WR1]=["LIKWID_WPQ_INSERTS_MBOX4C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_WR_MBOX4C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX4C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM2_WR2]=["LIKWID_WPQ_INSERTS_MBOX5C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_WR_MBOX5C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX5C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM2_WR3]=["LIKWID_WPQ_INSERTS_MBOX6C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_WR_MBOX6C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX6C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM2_WR4]=["LIKWID_WPQ_INSERTS_MBOX7C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_WR_MBOX7C1_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX7C1_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM2_RD1]=["LIKWID_RPQ_INSERTS_MBOX4C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX4C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_RPQ_CYCLES_NE_MBOX4C0_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM2_RD2]=["LIKWID_RPQ_INSERTS_MBOX5C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX5C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_RPQ_CYCLES_NE_MBOX5C0_EDGEDETECT_THRESHOLD=0x1"]
+        counters[MEM2_RD3]=["LIKWID_RPQ_INSERTS_MBOX6C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX6C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_RPQ_CYCLES_NE_MBOX6C0_EDGEDETECT_THRESHOLD=0x1"]        
+        counters[MEM2_RD4]=["LIKWID_RPQ_INSERTS_MBOX7C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_CAS_COUNT_RD_MBOX7C0_EDGEDETECT_THRESHOLD=0x1" , "LIKWID_WPQ_CYCLES_NE_MBOX7C0_EDGEDETECT_THRESHOLD=0x1"]        
+        counters[RQ_RD1]=["LIKWID_REQUESTS_READS_BBOX0C0" , "LIKWID_IMC_READS_NORMAL_BBOX0C0_EDGEDETECT_THRESHOLD=0x1"]        
+        counters[RQ_RD2]=["LIKWID_REQUESTS_READS_BBOX2C0" , "LIKWID_IMC_READS_NORMAL_BBOX1C0_EDGEDETECT_THRESHOLD=0x1"]        
+        counters[RQ_WR1]=["LIKWID_REQUESTS_WRITES_BBOX0C1" , "LIKWID_IMC_WRITES_ALL_BBOX0C1_EDGEDETECT_THRESHOLD=0x1"]        
+        counters[RQ_WR2]=["LIKWID_REQUESTS_WRITES_BBOX1C1" , "LIKWID_IMC_WRITES_ALL_BBOX1C1_EDGEDETECT_THRESHOLD=0x1"]        
+        counters[IR_WR1]=["LIKWID_IMC_WRITES_ALL_BBOX0C3"]        
+        counters[IR_WR2]=["LIKWID_IMC_WRITES_ALL_BBOX1C3"]        
+        counters[IR_RD1]=["LIKWID_IMC_READS_NORMAL_BBOX0C2"]        
+        counters[IR_RD2]=["LIKWID_IMC_READS_NORMAL_BBOX1C2"]        
+        counters[IR_DR_O]=["PAPI_NATIVE_OFFCORE_REQUESTS_OUTSTANDING_DEMAND_DATA_RD"]        
+        counters[IR_DR_A]=["PAPI_NATIVE_OFFCORE_REQUESTS_DEMAND_DATA_RD"]        
+        counters[SQ_F]=["PAPI_NATIVE_OFFCORE_REQUESTS_BUFFER_SQ_FULL"]        
+     elif system == "summit":
+        counters[L3]=["PAPI_NATIVE_LAST_LEVEL_CACHE_MISSES"]
+        counters[INS]=["PAPI_NATIVE_INSTRUCTIONS_RETIRED"]
+        counters[TCA]=["PAPI_NATIVE_LAST_LEVEL_CACHE_REFERENCES"]
+        counters[LD]=["PAPI_NATIVE_CYCLE_ACTIVITY_STALLS_LDM_PENDING", "PAPI_NATIVE_UOPS_RETIRED_STALL_CYCLES"]
+        counters[ST]=["PAPI_NATIVE_RESOURCE_STALLS_SB"]
+        counters[TCYC]=["PAPI_NATIVE_perf__CPU-CYCLES", "PAPI_NATIVE_ix86arch__UNHALTED_CORE_CYCLES"]
+        counters[MEMO]=["PAPI_NATIVE_MEM_LOAD_UOPS_LLC_MISS_RETIRED"]
+     else:
+        counters[L3]=[""]
+        counters[INS]=[""]
+        counters[TCA]=[""]
+        counters[LD]=[""]
+        counters[ST]=[""]
+        counters[TCYC]=[""]
+     return counters
+
 def Average(lst): 
     sumlst = 0
     for val in lst:
@@ -248,110 +302,16 @@ def get_event(event_id):
     else:
         return -1
  
-def get_trigger(word):
-    if word == "PAPI_NATIVE_LAST_LEVEL_CACHE_MISSES" or word == "LIKWID_L3_LAT_CACHE_MISS_PMC1":
-        trigger = L3
-        print("Found " + word)
-    elif word == "PAPI_NATIVE_INSTRUCTIONS_RETIRED" or word == "LIKWID_INSTR_RETIRED_ANY_FIXC0":
-        trigger = INS
-        print("Found " + word) 
-    elif word == "PAPI_NATIVE_LAST_LEVEL_CACHE_REFERENCES" or word == "LIKWID_L3_LAT_CACHE_REFERENCE_PMC0":
-        trigger = TCA
-        print("Found " + word)
-    elif word == "PAPI_NATIVE_UOPS_RETIRED_STALL_CYCLES" or word == "PAPI_NATIVE_CYCLE_ACTIVITY_STALLS_LDM_PENDING" or word == "LIKWID_CYCLE_ACTIVITY_CYCLES_LDM_PENDING_PMC3":
-        trigger = LD
-        print("Found " + word)
-    elif word == "PAPI_NATIVE_RESOURCE_STALLS_SB" or word == "LIKWID_RESOURCE_STALLS_SB_PMC4":
-        trigger = ST
-        print("Found " + word)
-    elif word == "PAPI_NATIVE_perf__CPU-CYCLES" or word == "PAPI_NATIVE_ix86arch__UNHALTED_CORE_CYCLES" or word == "LIKWID_CPU_CLK_UNHALTED_CORE_FIXC1":
-        trigger = TCYC
-        print("Found " + word)
-    elif word == "LIKWID_MEM_UOPS_RETIRED_LOADS_PMC2" or word == "PAPI_NATIVE_MEM_LOAD_UOPS_LLC_MISS_RETIRED":
-        trigger = MEMO
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX0C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX0C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX0C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_WR1
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX1C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX1C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX1C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_WR2
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX2C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX2C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX2C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_WR3
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX3C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX3C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX3C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_WR4
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX0C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX0C0" or word == "LIKWID_RPQ_CYCLES_NE_MBOX0C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_RD1
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX1C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX1C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_RPQ_CYCLES_NE_MBOX1C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_RD2
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX2C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX2C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_RPQ_CYCLES_NE_MBOX2C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_RD3
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX3C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX3C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX3C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM1_RD4
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX4C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX4C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX4C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_WR1
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX5C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX5C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX5C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_WR2
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX6C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX6C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX6C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_WR3
-        print("Found" + word)
-    elif word == "LIKWID_WPQ_INSERTS_MBOX7C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_WR_MBOX7C1_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX7C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_WR4
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX4C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX4C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_RPQ_CYCLES_NE_MBOX4C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_RD1
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX5C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX5C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_RPQ_CYCLES_NE_MBOX5C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_RD2
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX6C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX6C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_RPQ_CYCLES_NE_MBOX6C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_RD3
-        print("Found" + word)
-    elif word == "LIKWID_RPQ_INSERTS_MBOX7C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_CAS_COUNT_RD_MBOX7C0_EDGEDETECT_THRESHOLD=0x1" or word == "LIKWID_WPQ_CYCLES_NE_MBOX7C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = MEM2_RD4
-        print("Found" + word)
-    elif word == "LIKWID_REQUESTS_READS_BBOX0C0" or word == "LIKWID_IMC_READS_NORMAL_BBOX0C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = RQ_RD1
-        print("Found" + word)
-    elif word == "LIKWID_REQUESTS_READS_BBOX2C0" or word == "LIKWID_IMC_READS_NORMAL_BBOX1C0_EDGEDETECT_THRESHOLD=0x1":
-        trigger = RQ_RD2
-        print("Found" + word)
-    elif word == "LIKWID_REQUESTS_WRITES_BBOX0C1" or word == "LIKWID_IMC_WRITES_ALL_BBOX0C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = RQ_WR1
-        print("Found" + word)
-    elif word == "LIKWID_REQUESTS_WRITES_BBOX1C1" or word == "LIKWID_IMC_WRITES_ALL_BBOX1C1_EDGEDETECT_THRESHOLD=0x1":
-        trigger = RQ_WR2
-        print("Found" + word)
-    elif word == "LIKWID_IMC_READS_NORMAL_BBOX0C2":
-        trigger = IR_RD1
-        print("Found" + word)
-    elif word == "LIKWID_IMC_READS_NORMAL_BBOX1C2":
-        trigger = IR_RD2
-        print("Found" + word)
-    elif word == "LIKWID_IMC_WRITES_ALL_BBOX0C3":
-        trigger = IR_WR1
-        print("Found" + word)
-    elif word == "LIKWID_IMC_WRITES_ALL_BBOX1C3":
-        trigger = IR_WR2
-        print("Found" + word)
-    elif word == "PAPI_NATIVE_OFFCORE_REQUESTS_OUTSTANDING_DEMAND_DATA_RD":
-        trigger = DR_O
-        print("Found" + word)
-    elif word == "PAPI_NATIVE_OFFCORE_REQUESTS_DEMAND_DATA_RD":
-        trigger = DR_A
-        print("Found" + word)
-    elif word == "PAPI_NATIVE_OFFCORE_REQUESTS_BUFFER_SQ_FULL":
-        trigger = SQ_F
-        print("Found" + word)
-    elif word == "MPI_Gather()  ":
+def get_trigger(word, counters):
+    all_counters = counters.keys()
+    trigger = -1
+    for key in all_counters:    
+        if word in counters[key]:
+            trigger = key
+            print("Found " + word)
+            return trigger
+
+    if word == "MPI_Gather()  ":
         trigger = MPISR
         print("Found MPI_Gather()  ")
     elif word == "MPI_Gatherv()  ":
@@ -391,14 +351,15 @@ def get_trigger(word):
         trigger = -1
     return trigger
 	  
-def read_edf(name):
+def read_edf(name, system):
     counters=[]
+    avail_counters = get_counters_info(system)
     with open(name, 'r') as f:
         line = f.readline()        
         line = f.readline()        
         for line in f:
             words = line.split('\"')
-            trigger = get_trigger(words[1])
+            trigger = get_trigger(words[1], avail_counters)
             if ( trigger != -1 ) :
                 words2 = words[0].split(' ')
                 counters.append(trigger)
@@ -1233,8 +1194,8 @@ def merge_keys(key1, key2, nprocs):
 def main():
     global ini_timestamp
     global image_path
-    if len(sys.argv) != 7:
-       print("Usage: python tau_python.py tracedir nprocs nthreads image_path")
+    if len(sys.argv) != 8:
+       print("Usage: python tau_python.py tracedir nprocs nthreads image_path system")
        print(sys.argv)
     exp_dir = sys.argv[1]
     nprocs1 = int(sys.argv[2])
@@ -1242,6 +1203,7 @@ def main():
     nprocs3 = int(sys.argv[4])
     ini_timestamp = int(sys.argv[5])
     image_path= sys.argv[6]
+    system = sys.argv[7]
     reference = 0
     max_mem = max_papi = max_per = 0
     dirs = os.listdir(exp_dir)
@@ -1271,7 +1233,7 @@ def main():
             edffile = tracedir + "/events." + str(reference) + ".edf"
             #outpath= image_path + "/Simulation"
             outpath= image_path + "/" + dir
-            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, np, 1, reference)
+            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, np, 1, reference, system)
 
         if dir == "subsample":
             #reference = nprocs1
@@ -1279,14 +1241,14 @@ def main():
             edffile = tracedir + "/events." + str(reference) + ".edf"
             #outpath= image_path + "/Particle_selection"
             outpath= image_path + "/" + dir
-            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, nprocs2, 1, reference)
+            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, nprocs2, 1, reference, system)
         elif bool("subsample" in dir):
             reference = int(dir.split('_')[1])
             np = int(dir.split('_')[2])
             print("reference ", reference)
             edffile = tracedir + "/events." + str(reference) + ".edf"
             outpath= image_path + "/" + dir
-            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, np, 1, reference)
+            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, np, 1, reference, system)
         elif dir == "particle" or bool("particle" in dir) or bool('analysis' in dir):
             np = None  
             if dir == 'particle':
@@ -1299,7 +1261,7 @@ def main():
                 np = int(dir.split('_')[2])
                 edffile = tracedir + "/events." + str(reference) + ".edf"
                 outpath= image_path + "/" + dir
-                vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, np, 1, reference)
+                vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, np, 1, reference, system)
             elif dir == 'analysis':
                 #reference = nprocs1
                 reference = 0
@@ -1312,12 +1274,12 @@ def main():
                 np = nprocs3
             outpath= image_path + "/" + dir
             edffile = tracedir + "/events." + str(reference) + ".edf"
-            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert, counter = get_max(outpath, edffile, tracedir, np, 1, reference)
+            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert, counter = get_max(outpath, edffile, tracedir, np, 1, reference, system)
         elif bool('stream' in dir):
             reference = 0
             edffile = tracedir + "/events." + str(reference) + ".edf"
             outpath= image_path + "/" + dir
-            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, 1, 1, 0)
+            vals_dir, keys_mem, keys_papi, max_memt, max_papit, max_pert,counter = get_max(outpath, edffile, tracedir, 1, 1, 0, system)
         else:
             continue
         print("\nProcessed", tracedir) 
@@ -1361,7 +1323,7 @@ def main():
     save_data(image_path, xlsx_fname, "Overall", vals_final, keys_papi, 1)
 
 
-def get_max(expdir, edffile, tracedir, nprocs, nthreads, reference):
+def get_max(expdir, edffile, tracedir, nprocs, nthreads, reference, system):
     global function_id
     global tag
     global unmap
@@ -1387,7 +1349,7 @@ def get_max(expdir, edffile, tracedir, nprocs, nthreads, reference):
         else:
             umpi[ctr%CMPI] = []
 
-    counter = read_edf(edffile)
+    counter = read_edf(edffile, system)
     read_trace(tracedir, nprocs, nthreads, reference)
     
     print("Reading keys of counter RSS")
