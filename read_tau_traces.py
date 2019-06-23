@@ -198,13 +198,11 @@ def get_counters_info(system):
         counters[IR_DR_A]=["PAPI_NATIVE_OFFCORE_REQUESTS_DEMAND_DATA_RD"]        
         counters[SQ_F]=["PAPI_NATIVE_OFFCORE_REQUESTS_BUFFER_SQ_FULL"]        
      elif system == "summit":
-        counters[L3]=["PAPI_NATIVE_LAST_LEVEL_CACHE_MISSES"]
-        counters[INS]=["PAPI_NATIVE_INSTRUCTIONS_RETIRED"]
-        counters[TCA]=["PAPI_NATIVE_LAST_LEVEL_CACHE_REFERENCES"]
-        counters[LD]=["PAPI_NATIVE_CYCLE_ACTIVITY_STALLS_LDM_PENDING", "PAPI_NATIVE_UOPS_RETIRED_STALL_CYCLES"]
-        counters[ST]=["PAPI_NATIVE_RESOURCE_STALLS_SB"]
-        counters[TCYC]=["PAPI_NATIVE_perf__CPU-CYCLES", "PAPI_NATIVE_ix86arch__UNHALTED_CORE_CYCLES"]
-        counters[MEMO]=["PAPI_NATIVE_MEM_LOAD_UOPS_LLC_MISS_RETIRED"]
+        counters[L3]=["PAPI_NATIVE_PM_DATA_FROM_L3MISS"] #["PAPI_NATIVE_PM_INST_FROM_L3MISS"]
+        counters[INS]=["PAPI_NATIVE_PM_INST_CMPL"]
+        counters[TCA]=["PAPI_NATIVE_PM_RUN_INST_CMPL"]
+        counters[LD]=["PAPI_NATIVE_PM_LD_L3MISS_PEND_CYC"]
+        counters[TCYC]=["PAPI_NATIVE_PM_RUN_CYC", "PAPI_NATIVE_PM_CYC"]
      else:
         counters[L3]=[""]
         counters[INS]=[""]
